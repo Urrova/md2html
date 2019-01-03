@@ -119,7 +119,20 @@ def convert():
 			linea = re.sub("\* ","",linea)
 			htmlContent+="		<li>"+linea+"</li>\n"
 			
-		
+		#IMAGENES!!!!!!!!!!!!!!!!1
+		elif re.match(r"\!\[.*\]\(.*\)",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
+			print("Detectado: IMG")
+			ruta = re.sub(r"\!\[.*\]\(","",linea)
+			ruta = re.sub("\)","",ruta)
+			
+			alt = re.sub(r"\!\[","",linea)
+			alt = re.sub("\]\(.*\)","",alt)
+			
+			htmlContent+="		<img src='"+ruta+"' alt='"+alt+"'>\n"
 		
 		#No hay nada?? Es un texto plano
 		else:
@@ -127,6 +140,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
+			print("Detectado: P")
 			htmlContent+="		<p>"+linea+"</p>\n"
 			
 			

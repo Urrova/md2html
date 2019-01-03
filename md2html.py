@@ -97,10 +97,18 @@ def convert():
 				htmlContent+="		</ul>\n"
 			print("Detectado: HR")
 			htmlContent+="		<hr>\n"
-			
+		
+		#Blockquotes
+		elif re.match(r"> ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
+			print("Detectado: p con estilo de blockquote")
+			linea = re.sub(r"> ","",linea)
+			htmlContent+="		<p style='background:#eee; font-style:italic; padding:5px; border-left:2px solid #000;'>"+linea+"</p>\n"
+		
 		###Lista desordenada
-		
-		
 		elif re.match("\* ",linea):
 			print("Detectado: Lista")
 			if enlista == False:

@@ -35,7 +35,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H1")
+			print("Detectado: <h1>")
 			linea = re.sub(r"# ","",linea)
 			htmlContent+="		<h1>"+linea+"</h1>\n"
 	
@@ -45,7 +45,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H2")
+			print("Detectado: <h2>")
 			linea = re.sub(r"## ","",linea)
 			htmlContent+="		<h2>"+linea+"</h2>\n"
 			
@@ -55,7 +55,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H3")
+			print("Detectado: <h3>")
 			linea = re.sub(r"### ","",linea)
 			htmlContent+="		<h3>"+linea+"</h3>\n"
 			
@@ -65,7 +65,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H4")
+			print("Detectado: <h4>")
 			linea = re.sub(r"#### ","",linea)
 			htmlContent+="		<h4>"+linea+"</h4>\n"
 			
@@ -75,7 +75,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H5")
+			print("Detectado: <h5>")
 			linea = re.sub(r"##### ","",linea)
 			htmlContent+="		<h5>"+linea+"</h5>\n"
 			
@@ -85,7 +85,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: H6")
+			print("Detectado: <h6>")
 			linea = re.sub(r"###### ","",linea)
 			htmlContent+="		<h6>"+linea+"</h6>\n"
 		
@@ -95,7 +95,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: HR")
+			print("Detectado: <hr>")
 			htmlContent+="		<hr>\n"
 		
 		#Blockquotes
@@ -104,18 +104,18 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: p con estilo de blockquote")
+			print("Detectado: <p> con estilo de blockquote")
 			linea = re.sub(r"> ","",linea)
 			htmlContent+="		<p style='background:#eee; font-style:italic; padding:5px; border-left:2px solid #000;'>"+linea+"</p>\n"
 		
 		###Lista desordenada
 		elif re.match("\* ",linea):
-			print("Detectado: Lista")
+			print("Detectado: <ul>")
 			if enlista == False:
 				print("---SE ENTRO EN LA LISTA---")
 				enlista = True
 				htmlContent+="		<ul>\n"
-			print("Añadido elemento de lista.")
+			print("Añadido <li>.")
 			linea = re.sub("\* ","",linea)
 			htmlContent+="		<li>"+linea+"</li>\n"
 			
@@ -125,7 +125,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: IMG")
+			print("Detectado: <img>")
 			ruta = re.sub(r"\!\[.*\]\(","",linea)
 			ruta = re.sub("\)","",ruta)
 			
@@ -133,6 +133,24 @@ def convert():
 			alt = re.sub("\]\(.*\)","",alt)
 			
 			htmlContent+="		<img src='"+ruta+"' alt='"+alt+"'>\n"
+			
+			
+		#Links separados
+		
+		elif re.match(r"\[.*\]\(.*\)",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
+			print("Detectado: <a>")
+			ruta = re.sub(r"\[.*\]\(","",linea)
+			ruta = re.sub("\)","",ruta)
+			
+			txt = re.sub(r"\[","",linea)
+			txt = re.sub("\]\(.*\)","",txt)
+			
+			htmlContent+="		<a href='"+ruta+"'>"+txt+"</a>\n"
+		
 		
 		#No hay nada?? Es un texto plano
 		else:
@@ -140,7 +158,7 @@ def convert():
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
-			print("Detectado: P")
+			print("Detectado: <p>")
 			htmlContent+="		<p>"+linea+"</p>\n"
 			
 			

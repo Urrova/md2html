@@ -31,51 +31,94 @@ def convert():
 		
 		#Titulo 1
 		if re.match(r"# ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H1")
 			linea = re.sub(r"# ","",linea)
 			htmlContent+="		<h1>"+linea+"</h1>\n"
 	
 		#Titulo 2
 		elif re.match(r"## ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H2")
 			linea = re.sub(r"## ","",linea)
 			htmlContent+="		<h2>"+linea+"</h2>\n"
 			
 		#Titulo 3
 		elif re.match(r"### ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H3")
 			linea = re.sub(r"### ","",linea)
 			htmlContent+="		<h3>"+linea+"</h3>\n"
 			
 		#Titulo 4
 		elif re.match(r"#### ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H4")
 			linea = re.sub(r"#### ","",linea)
 			htmlContent+="		<h4>"+linea+"</h4>\n"
 			
 		#Titulo 5
 		elif re.match(r"##### ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H5")
 			linea = re.sub(r"##### ","",linea)
 			htmlContent+="		<h5>"+linea+"</h5>\n"
 			
 		#Titulo 6
 		elif re.match(r"###### ",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: H6")
 			linea = re.sub(r"###### ","",linea)
 			htmlContent+="		<h6>"+linea+"</h6>\n"
 		
 		###Separador
 		elif re.match(r"---",linea):
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			print("Detectado: HR")
 			htmlContent+="		<hr>\n"
 			
 		###Lista desordenada
 		
 		
+		elif re.match("\* ",linea):
+			print("Detectado: Lista")
+			if enlista == False:
+				print("---SE ENTRO EN LA LISTA---")
+				enlista = True
+				htmlContent+="		<ul>\n"
+			print("Añadido elemento de lista.")
+			linea = re.sub("\* ","",linea)
+			htmlContent+="		<li>"+linea+"</li>\n"
+			
+		
 		
 		#No hay nada?? Es un texto plano
 		else:
+			if enlista == True:
+				print("---SE SALIO EN LA LISTA---")
+				enlista = False
+				htmlContent+="		</ul>\n"
 			htmlContent+="		<p>"+linea+"</p>\n"
 			
 			

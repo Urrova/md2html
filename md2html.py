@@ -194,7 +194,7 @@ def convert(f):
 						lineaaponer +="</i>"
 						encursiva = False
 				#Lineas de codigo
-				if linea[i] == "`":
+				elif linea[i] == "`":
 					print("Detectado: <span> con estilo de codigo")
 					if encursiva == False:
 						print("Abriendo <span>")
@@ -203,6 +203,18 @@ def convert(f):
 					elif encursiva == True:
 						print("Cerrando <span>")
 						lineaaponer +="</span>"
+						encursiva = False
+				#Negritas
+				elif linea[i] == "*" and linea[i+1] == "*":
+					print("Detectado: <b>")
+					i+=1
+					if encursiva == False:
+						print("Abriendo <b>")
+						lineaaponer +="<b>"
+						encursiva = True
+					elif encursiva == True:
+						print("Cerrando <b>")
+						lineaaponer +="</b>"
 						encursiva = False
 				else:
 					lineaaponer+=linea[i]

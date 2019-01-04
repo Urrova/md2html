@@ -1,9 +1,12 @@
 import re
-from appJar import gui
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+from tkinter import filedialog
 
-def convert():
+def convert(f):
 	#Toma la ruta del FileEntry
-	root = app.getEntry("MD_File")
+	root = f
 	#Abre el archivo de la ruta
 	md = open(root, "r")
 	#Lee el archivo
@@ -23,6 +26,7 @@ def convert():
 	content = crudeContent.split("\n")
 	
 	enlista = False
+	encodigo = False
 	#Aca se procesa cada linea
 	for linea in content:
 		#Cosas que se definen al principio de la linea (Titulos, Blockquotes, Etc)
@@ -101,7 +105,7 @@ def convert():
 		#Blockquotes
 		elif re.match(r"> ",linea):
 			if enlista == True:
-				print("---SE SALIO EN LA LISTA---")
+				print("---SE SALIO DE LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
 			print("Detectado: <p> con estilo de blockquote")
@@ -119,6 +123,19 @@ def convert():
 			linea = re.sub("\* ","",linea)
 			htmlContent+="		<li>"+linea+"</li>\n"
 			
+		###Bloque de codigo
+		elif re.match("```",linea):
+			print("Detectado: <div> con estilo de codigo")
+			if encodigo == False:
+				encodigo = True
+				print("---SE ENTRO EN EL CODIGO---")
+				htmlContent+="		<div style='background-color:#000; color:#FFF; font-family:monospace; border-left:4px solid #0F0; padding:3px;'>"
+			else:
+				encodigo = False
+				print("---SE SALIO DE EL CODIGO---")
+				htmlContent+="		</div>"
+				
+		
 		#IMAGENES!!!!!!!!!!!!!!!!1
 		elif re.match(r"\!\[.*\]\(.*\)",linea):
 			if enlista == True:
@@ -169,7 +186,7 @@ def convert():
 	
 	#Ahora a guardar el archivo!!!
 	
-	saveRoot = app.saveBox(title="Save...",fileName=None,dirName=None,fileExt=".html", fileTypes=[('HTML file', '*.html *.htm'), ('Plain text file', '*.txt')])
+	saveRoot = filedialog.asksaveasfilename(filetypes=[('HTML file', '*.html *.htm'), ('Plain text file', '*.txt')])
 	
 	saveFile = open(saveRoot, "w")
 	
@@ -179,30 +196,57 @@ def convert():
 	
 	#Finish
 	
+	
+def load():
+	fileroot = filedialog.askopenfilename(filetypes = (("MarkDown file","*.md"),("Plain text file","*.txt")))
+	print("Root of file to charge: {}".format(fileroot))
+	rootlabel["text"] = fileroot
+	return fileroot
+	
 def save():
 	print("Save")
 
-def options(opt):
-	if opt == "Convert":
-		convert()
-	if opt == "Save":
-		save()
+
 	
 def aboutPress(abt):
 	print("About "+str(abt))
 
+#Setting vars
 about = ["Help","Credits"]
 
-app = gui("md2html","300x150")
 
-app.addMenuList("About", about, aboutPress)
 
-app.addLabel("Title","Welcome to md2html")
+print("Initializating window")
+root = Tk()
 
-app.addFileEntry("MD_File")
+fileroot = StringVar()
+fileroot.set("No selected")
 
-app.addHorizontalSeparator()
+print("Building window")
+root.geometry("300x200")
+root.resizable(False,False)
 
-app.addButtons(["Convert","Exit"],options)
+title = Label(root, text = "md2htmk", font=("Helvetica",30))
+title.pack()
 
-app.go()
+Frame(root, width=400, height=5).pack()
+Frame(root, width=400, height=2, relief=SUNKEN, bd=1).pack()
+Frame(root, width=400, height=5).pack()
+
+Label(root,text="MarkDown file:").pack()
+
+rootlabel = Label(root,text="No selected")
+rootlabel.pack()
+
+rootbutton = Button(root, text="Select File", command=lambda: fileroot.set(load()))
+rootbutton.pack()
+
+Frame(root, width=400, height=5).pack()
+Frame(root, width=400, height=2, relief=SUNKEN, bd=1).pack()
+Frame(root, width=400, height=5).pack()
+
+convertbutton = Button(root, text="Convert", command = lambda: convert(fileroot.get()))
+convertbutton.pack()
+
+print("mainloop")
+root.mainloop()

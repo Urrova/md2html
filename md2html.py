@@ -168,15 +168,51 @@ def convert(f):
 			
 			htmlContent+="		<a href='"+ruta+"'>"+txt+"</a>\n"
 		
+		###Cosas que se detectan en una linea.
 		
-		#No hay nada?? Es un texto plano
+		
+		
+		
+		
 		else:
+			i = 0
+			lineaaponer = ""
+			algo = False
+			ennegrita = False
+			encursiva = False
+			encodeline = False
+			while i < len(linea):	
+				#Cursivas
+				if linea[i] == "_":
+					print("Detectado: <i>")
+					if encursiva == False:
+						print("Abriendo <i>")
+						lineaaponer +="<i>"
+						encursiva = True
+					elif encursiva == True:
+						print("Cerrando <i>")
+						lineaaponer +="</i>"
+						encursiva = False
+				#Lineas de codigo
+				if linea[i] == "`":
+					print("Detectado: <span> con estilo de codigo")
+					if encursiva == False:
+						print("Abriendo <span>")
+						lineaaponer +="<span style='background-color:#000;color:#FFF;font-family:monospace;padding:2px;'>"
+						encursiva = True
+					elif encursiva == True:
+						print("Cerrando <span>")
+						lineaaponer +="</span>"
+						encursiva = False
+				else:
+					lineaaponer+=linea[i]
+				i+=1
 			if enlista == True:
 				print("---SE SALIO EN LA LISTA---")
 				enlista = False
 				htmlContent+="		</ul>\n"
 			print("Detectado: <p>")
-			htmlContent+="		<p>"+linea+"</p>\n"
+			htmlContent+="		<p>"+lineaaponer+"</p>\n"
 			
 			
 	#Cierra <body> y cierra <html>

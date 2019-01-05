@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
 
-def convert(f):
+def convert(f, t, bgc,txtc, qbg):
 	#Toma la ruta del FileEntry
 	root = f
 	#Abre el archivo de la ruta
@@ -17,8 +17,28 @@ def convert(f):
 	#Prepara una estructura abierta de HTML
 	htmlContent = '''<html>
 	<head>
-		<title>Title</title>
+		<title>'''+t+'''</title>
 		<meta charset="uft-8">
+		<style>
+			body{
+			background-color:'''+bgc+''';
+			color:'''+txtc+''';
+			}
+			.code{
+			color:white;
+			background-color:#000;
+			color:#FFF; 
+			font-family:monospace; 
+			border-left:4px solid #0F0; 
+			padding:3px;
+			}
+			.blockquote{
+			background:'''+qbg+'''; 
+			font-style:italic; 
+			padding:5px; 
+			border-left:2px solid #000;
+			}
+		</style>
 	</head>
 	<body>
 	'''
@@ -110,7 +130,7 @@ def convert(f):
 				htmlContent+="		</ul>\n"
 			print("Detectado: <p> con estilo de blockquote")
 			linea = re.sub(r"> ","",linea)
-			htmlContent+="		<p style='background:#eee; font-style:italic; padding:5px; border-left:2px solid #000;'>"+linea+"</p>\n"
+			htmlContent+="		<p class='blockquote'>"+linea+"</p>\n"
 		
 		###Lista desordenada
 		elif re.match("\* ",linea):
@@ -129,7 +149,7 @@ def convert(f):
 			if encodigo == False:
 				encodigo = True
 				print("---SE ENTRO EN EL CODIGO---")
-				htmlContent+="		<div style='background-color:#000; color:#FFF; font-family:monospace; border-left:4px solid #0F0; padding:3px;'>"
+				htmlContent+="		<div class='code'>"
 			else:
 				encodigo = False
 				print("---SE SALIO DE EL CODIGO---")
@@ -271,7 +291,7 @@ fileroot = StringVar()
 fileroot.set("No selected")
 
 print("Building window")
-root.geometry("300x200")
+root.geometry("300x400")
 root.resizable(False,False)
 
 title = Label(root, text = "md2htmk", font=("Helvetica",30))
@@ -293,7 +313,33 @@ Frame(root, width=400, height=5).pack()
 Frame(root, width=400, height=2, relief=SUNKEN, bd=1).pack()
 Frame(root, width=400, height=5).pack()
 
-convertbutton = Button(root, text="Convert", command = lambda: convert(fileroot.get()))
+Label(root,text="Options:", font=("Helvetica",20)).pack()
+
+Label(root,text="Tab title:").pack()
+
+tabtitleEntry = Entry(root)
+tabtitleEntry.pack()
+
+Label(root,text="Background color (in hexadecimal or english word):").pack()
+
+bgcolorEntry = Entry(root)
+bgcolorEntry.pack()
+
+Label(root,text="Text color:").pack()
+
+txtcolorEntry = Entry(root)
+txtcolorEntry.pack()
+
+Label(root,text="Quotes background color:").pack()
+
+qbgcolorEntry = Entry(root)
+qbgcolorEntry.pack()
+
+Frame(root, width=400, height=5).pack()
+Frame(root, width=400, height=2, relief=SUNKEN, bd=1).pack()
+Frame(root, width=400, height=5).pack()
+
+convertbutton = Button(root, text="Convert", command = lambda: convert(fileroot.get(),tabtitleEntry.get(),bgcolorEntry.get(),txtcolorEntry.get(),qbgcolorEntry.get()))
 convertbutton.pack()
 
 print("mainloop")

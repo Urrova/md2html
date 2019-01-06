@@ -4,11 +4,21 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
 
-def convert(f, t, bgc,txtc, qbg):
+def convert(f, t, bgc,txtc, qbg,fs,fo):
 	#Toma la ruta del FileEntry
 	root = f
 	#Abre el archivo de la ruta
-	md = open(root, "r")
+	try:
+		md = open(root, "r")
+	except FileNotFoundError:
+		if root == "No selected":
+			print("No seleccionado")
+			messagebox.showinfo("md2html","No selected")
+			return 1
+		else:
+			print("Archivo no encontrado")
+			messagebox.showinfo("md2html","Not found")
+			return 1
 	#Lee el archivo
 	crudeContent = md.read()
 	#Cierra el archivo
@@ -23,6 +33,8 @@ def convert(f, t, bgc,txtc, qbg):
 			body{
 			background-color:'''+bgc+''';
 			color:'''+txtc+''';
+			font-size:'''+fs+''';
+			font-family:'''+fo+''';
 			}
 			.code{
 			color:white;
@@ -262,12 +274,16 @@ def convert(f, t, bgc,txtc, qbg):
 	
 	saveFile.close()
 	
+	print("Archivo HTML guardado en {}".format(saveRoot))
+	
+	print("Fin del proceso.\n=====================================================")
+	
 	#Finish
 	
 	
 def load():
 	fileroot = filedialog.askopenfilename(filetypes = (("MarkDown file","*.md"),("Plain text file","*.txt")))
-	print("Root of file to charge: {}".format(fileroot))
+	print("Ruta del archivo a cargar: {}".format(fileroot))
 	rootlabel["text"] = fileroot
 	return fileroot
 	
@@ -281,18 +297,32 @@ def aboutPress(abt):
 
 #Setting vars
 about = ["Help","Credits"]
+fonts = ["Georgia, serif",
+"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif",
+"\"Times New Roman\", Times, serif",
+"Arial, Helvetica, sans-serif",
+"\"Arial Black\", Gadget, sans-serif",
+"\"Comic Sans MS\", cursive, sans-serif",
+"Impact, Charcoal, sans-serif",
+"\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif",
+"Tahoma, Geneva, sans-serif",
+"\"Trebuchet MS\", Helvetica, sans-serif",
+"Verdana, Geneva, sans-serif",
+"\"Courier New\", Courier, monospace",
+"\"Lucida Console\", Monaco, monospace"]
 
 
 
-print("Initializating window")
+print("Inicializando ventana")
 root = Tk()
 
 fileroot = StringVar()
 fileroot.set("No selected")
 
-print("Building window")
-root.geometry("300x400")
+print("Construyendo...")
+root.geometry("300x500")
 root.resizable(False,False)
+root.title("md2html")
 
 title = Label(root, text = "md2htmk", font=("Helvetica",30))
 title.pack()
@@ -330,6 +360,31 @@ Label(root,text="Text color:").pack()
 txtcolorEntry = Entry(root)
 txtcolorEntry.pack()
 
+Label(root,text="Font:").pack()
+
+fEntry = StringVar()
+fEntry.set("\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif")
+
+w = OptionMenu(root, fEntry, "Georgia, serif",
+"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif",
+"\"Times New Roman\", Times, serif",
+"Arial, Helvetica, sans-serif",
+"\"Arial Black\", Gadget, sans-serif",
+"\"Comic Sans MS\", cursive, sans-serif",
+"Impact, Charcoal, sans-serif",
+"\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif",
+"Tahoma, Geneva, sans-serif",
+"\"Trebuchet MS\", Helvetica, sans-serif",
+"Verdana, Geneva, sans-serif",
+"\"Courier New\", Courier, monospace",
+"\"Lucida Console\", Monaco, monospace")
+w.pack()
+
+Label(root,text="Font size:").pack()
+
+fsizeEntry = Entry(root)
+fsizeEntry.pack()
+
 Label(root,text="Quotes background color:").pack()
 
 qbgcolorEntry = Entry(root)
@@ -339,7 +394,7 @@ Frame(root, width=400, height=5).pack()
 Frame(root, width=400, height=2, relief=SUNKEN, bd=1).pack()
 Frame(root, width=400, height=5).pack()
 
-convertbutton = Button(root, text="Convert", command = lambda: convert(fileroot.get(),tabtitleEntry.get(),bgcolorEntry.get(),txtcolorEntry.get(),qbgcolorEntry.get()))
+convertbutton = Button(root, text="Convert", command = lambda: convert(fileroot.get(),tabtitleEntry.get(),bgcolorEntry.get(),txtcolorEntry.get(),qbgcolorEntry.get(),fsizeEntry.get(),fEntry.get()))
 convertbutton.pack()
 
 print("mainloop")
